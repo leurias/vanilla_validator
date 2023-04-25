@@ -4,7 +4,6 @@ require "i18n"
 require 'active_support/inflector'
 require_relative "vanilla_validator/my_validation"
 require_relative "vanilla_validator/version"
-require_relative "vanilla_validator/core_ext"
 require_relative "vanilla_validator/value_extractor"
 require_relative "vanilla_validator/rule"
 require_relative "vanilla_validator/rule_parser"
