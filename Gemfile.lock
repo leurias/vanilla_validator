@@ -2,11 +2,21 @@ PATH
   remote: .
   specs:
     vanilla_validator (0.1.0)
+      i18n
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (7.0.4.3)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+    concurrent-ruby (1.1.10)
     diff-lcs (1.5.0)
+    i18n (1.12.0)
+      concurrent-ruby (~> 1.0)
+    minitest (5.18.0)
     rake (13.0.6)
     rspec (3.11.0)
       rspec-core (~> 3.11.0)
@@ -21,11 +31,14 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
 
 PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  activesupport
   rake (~> 13.0)
   rspec (~> 3.2)
   vanilla_validator!
