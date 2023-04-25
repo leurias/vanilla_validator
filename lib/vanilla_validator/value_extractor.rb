@@ -17,7 +17,7 @@ module VanillaValidator
       end
 
       def self.steps_from path
-        path.split(SEPERATOR).map do |step|
+        path.split('.').map do |step|
           if step.match?(/\D/)
             step.to_s
           else
