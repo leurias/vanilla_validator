@@ -7,11 +7,25 @@ module VanillaValidator
       if path.include?("*")
         self.get_at_wildcard_path(data, path)
       else
-        data.get_at_explicit_path(path)
+        self.get_at_explicit_path(data, path)
       end
     end
 
     private
+      def self.get_at_explicit_path(data, path)
+        data.dig(*steps_from(path))
+      end
+
+      def self.steps_from path
+        path.split(SEPERATOR).map do |step|
+          if step.match?(/\D/)
+            step.to_s
+          else
+            step.to_i
+          end
+        end
+      end
+
       def self.get_at_wildcard_path(data, path, default = nil)
         path = path.is_a?(Array) ? path : path.split(".")
 
