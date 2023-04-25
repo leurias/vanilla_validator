@@ -65,7 +65,7 @@ describe VanillaValidator::ValueExtractor do
 		expect(described_class.get(data, path)).to eql result
 	end
 
-	it 'testcase 9' do
+	it 'testcase 10' do
 		data   = { "foo" => [ { "bar" => [ { "baz" => "quux 1" } ] }, { "bar" => [ { "baz" => "quux 2" } ] } ] }
 		path   = "foo.*.bar.*.baz"
 		result = ["quux 1", "quux 2"]
