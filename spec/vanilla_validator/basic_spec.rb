@@ -176,4 +176,48 @@ describe '#validate' do
 		expect(result.valid).to eq(true)
 	end
 
+	it 'validate in fields' do
+		input = {
+			"foo" => 5
+		}
+		result = VanillaValidator.validate(input, {
+			"foo" => "in:4,5,6"
+		})
+
+		expect(result.valid).to eq(true)
+	end
+
+	it 'validate url fields' do
+		input = {
+			"foo" => 'https://google.com'
+		}
+		result = VanillaValidator.validate(input, {
+			"foo" => "url"
+		})
+
+		expect(result.valid).to eq(true)
+	end
+
+	it 'validate after fields' do
+		input = {
+			"dob" => '2023-01-02'
+		}
+		result = VanillaValidator.validate(input, {
+			"dob" => "after:2023-01-01"
+		})
+
+		expect(result.valid).to eq(true)
+	end
+
+	it 'validate after_or_equal fields' do
+		input = {
+			"dob" => '2023-01-01'
+		}
+		result = VanillaValidator.validate(input, {
+			"dob" => "after_or_equal:2023-01-01"
+		})
+
+		expect(result.valid).to eq(true)
+	end
+
 end

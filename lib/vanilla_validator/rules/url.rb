@@ -1,12 +1,12 @@
 module VanillaValidator
 	module Rules
-		class Boolean < BaseRule
+		class Url < BaseRule
 			def valid?
-				!!value == value
+				value =~ URI::regexp
 			end
 
 			def failure_message
-	      I18n.t('boolean', attribute: attribute)
+	      I18n.t('url', attribute: attribute)
 	    end
 		end
 	end

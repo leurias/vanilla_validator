@@ -32,4 +32,6 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "i18n"
   spec.add_development_dependency "rspec", "~> 3.2"
+  spec.add_dependency "zeitwerk", "~> 2.5"
+  spec.add_dependency "activesupport"
 end
