@@ -28,6 +28,7 @@ require_relative "vanilla_validator/rules/numeric"
 require_relative "vanilla_validator/rules/required"
 require_relative "vanilla_validator/rules/required_if"
 require_relative "vanilla_validator/rules/url"
+require_relative "vanilla_validator/validator"
 
 I18n.load_path += Dir[File.dirname(__FILE__) + "/locale/*.yml"]
 
