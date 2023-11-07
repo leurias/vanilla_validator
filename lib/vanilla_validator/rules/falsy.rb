@@ -3,7 +3,7 @@ module VanillaValidator
 		class Falsy < BaseRule
 			def valid?
 				acceptable = ['no', 'off', '0', 0, false, 'false']
-				required && acceptable.include?(value)
+				required? && acceptable.include?(value)
 			end
 
 			def failure_message

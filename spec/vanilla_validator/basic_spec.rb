@@ -2,6 +2,17 @@ require 'spec_helper'
 
 describe '#validate' do
 
+	it 'can validate nested params' do
+		params = {"person"=>{"name"=>"Francesco", "age"=>22, "role"=>"admin"}}
+		contract = {
+			'person.name' => 'required'
+		}
+
+		result = VanillaValidator.validate(params, contract)
+		expect(result.validated).to eq({"person"=>{"name"=>"Francesco"}})
+		expect(result.valid?).to eq(true)
+	end
+
 	it 'validate required fields' do
 		input = {
 			"email" => 'john@gmail.com',
@@ -12,7 +23,7 @@ describe '#validate' do
 		})
 
 		expect(result.validated).to eq({"email"=>"john@gmail.com"})
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate required fields 2' do
@@ -24,7 +35,7 @@ describe '#validate' do
 			"email" => "required"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate boolean fields' do
@@ -35,7 +46,7 @@ describe '#validate' do
 			"female" => "boolean"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate boolean fields 2' do
@@ -46,7 +57,7 @@ describe '#validate' do
 			"female" => "boolean"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate falsy fields' do
@@ -57,7 +68,7 @@ describe '#validate' do
 			"female" => "falsy"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate falsy fields 2' do
@@ -68,7 +79,7 @@ describe '#validate' do
 			"female" => "falsy"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate email fields' do
@@ -79,7 +90,7 @@ describe '#validate' do
 			"email" => "email"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate email fields 2' do
@@ -90,7 +101,7 @@ describe '#validate' do
 			"email" => "email"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate max fields' do
@@ -101,7 +112,7 @@ describe '#validate' do
 			"email" => "email|max:32"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate max fields 2' do
@@ -112,7 +123,7 @@ describe '#validate' do
 			"email" => "email|max:4"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate min fields' do
@@ -123,7 +134,7 @@ describe '#validate' do
 			"email" => "email|min:8"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate min fields 2' do
@@ -134,7 +145,7 @@ describe '#validate' do
 			"email" => "email|min:10"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate like fields' do
@@ -147,7 +158,7 @@ describe '#validate' do
       "password_confirmation" => "like:password"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate like fields 2' do
@@ -160,7 +171,7 @@ describe '#validate' do
       "password_confirmation" => "like:password"
 		})
 
-		expect(result.valid).to eq(false)
+		expect(result.valid?).to eq(false)
 	end
 
 	it 'validate required_if fields' do
@@ -173,7 +184,7 @@ describe '#validate' do
 			"bar" => "required_if:foo,5",
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate in fields' do
@@ -184,7 +195,7 @@ describe '#validate' do
 			"foo" => "in:4,5,6"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate url fields' do
@@ -195,7 +206,7 @@ describe '#validate' do
 			"foo" => "url"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate after fields' do
@@ -206,7 +217,7 @@ describe '#validate' do
 			"dob" => "after:2023-01-01"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 	it 'validate after_or_equal fields' do
@@ -217,7 +228,7 @@ describe '#validate' do
 			"dob" => "after_or_equal:2023-01-01"
 		})
 
-		expect(result.valid).to eq(true)
+		expect(result.valid?).to eq(true)
 	end
 
 end

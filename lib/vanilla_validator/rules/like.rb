@@ -2,8 +2,8 @@ module VanillaValidator
 	module Rules
 		class Like < BaseRule
 			def valid?
-				other_value = VanillaValidator::ValueExtractor.get(VanillaValidator.get_input, parameters[0])
-				value.eql?(other_value)
+				other_value = ValueExtractor.get(VanillaValidator.raw_input, parameters[0])
+				value == other_value
 			end
 
 			def failure_message

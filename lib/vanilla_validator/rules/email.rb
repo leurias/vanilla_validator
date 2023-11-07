@@ -2,7 +2,7 @@ module VanillaValidator
 	module Rules
 		class Email < BaseRule
 			def valid?
-				required && value =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
+				required? && value =~ /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
 			end
 
 			def failure_message

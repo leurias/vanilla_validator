@@ -9,9 +9,8 @@ module VanillaValidator
 
 		  private
 
-		  def required
-		  	klass = Rules::Required.new(attribute, value, parameters)
-		  	klass.valid?
+		  def required?
+		  	Rules::Required.new(attribute, value, parameters).valid?
 		  end
 		end
 	end

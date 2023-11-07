@@ -57,22 +57,18 @@ describe VanillaValidator::RuleParser do
 	end
 
 	it 'testcase 9' do
-		class MyValidator < VanillaValidator::Rule
-			def self.passes(attribute, value)
-				
+		class MyRule < VanillaValidator::Rules::BaseRule
+			def self.valid?
 			end
 
-			def self.message
-				
-			end
+			def failure_message
+	      I18n.t('boolean', attribute: attribute)
+	    end
 		end
 
-		rule = MyValidator
+		rule = MyRule
 		rules = described_class.parse(rule).first
 		expect(rules.name).to eq 'custom'
 		expect(rules.parameters).to be rule
-		pp rule.message
 	end
-
-
 end
