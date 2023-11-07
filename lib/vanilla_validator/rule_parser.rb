@@ -1,32 +1,44 @@
 # frozen_string_literal: true
 
 module VanillaValidator
+  # RuleParser is responsible for parsing validation rules defined in a contract term.
   class RuleParser
-
-    def self.parse(protocol)
-      arr = []
-
-      if protocol.respond_to?(:call)
-        arr << Rule.new('proc', protocol)
-        return arr
+    # Public: Parse a contract term to extract validation rules.
+    #
+    # term - The contract term to parse, which may include one or more validation rules separated by '|'.
+    #
+    # Returns: An array of Rule objects representing the parsed validation rules.
+    #
+    # Examples:
+    #   RuleParser.parse('required|min:5') #=> [Rule.new('required', []), Rule.new('min_length', ['5'])]
+    #
+    def self.parse(term)
+      if term.respond_to?(:call)
+        [Rule.new('proc', term)]
+      elsif term.respond_to?(:valid?)
+        [Rule.new('custom', term)]
+      else
+        parse_rules(term)
       end
+    end
 
-      if protocol.respond_to?(:passes)
-        arr << Rule.new('custom', protocol)
-        return arr
-      end
+    private
 
-      rules = protocol.split('|')
-      
+    # Private: Parse individual validation rules from a contract term.
+    #
+    # term - The contract term to parse, which may include one or more validation rules separated by '|'.
+    #
+    # Returns: An array of Rule objects representing the parsed validation rules.
+    #
+    def self.parse_rules(term)
+      rules = term.split('|')
+
       rules.map do |rule|
         rule_name, params = rule.split(':') if rule.respond_to?(:split)
         parameters = params.split(',') if params.respond_to?(:split)
 
-        arr << Rule.new(rule_name, parameters)
+        Rule.new(rule_name, parameters)
       end
-
-      arr
     end
-
   end
 end

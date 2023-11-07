@@ -1,16 +1,17 @@
-module Rules
-	class BaseRule
-		attr_accessor :attribute, :value, :parameters
+module VanillaValidator
+	module Rules
+		class BaseRule
+			attr_accessor :attribute, :value, :parameters
 
-	  def initialize(attribute, value, parameters)
-	  	@attribute, @value, @parameters = attribute, value, parameters
-	  end
+		  def initialize(attribute, value, parameters)
+		  	@attribute, @value, @parameters = attribute, value, parameters
+		  end
 
-	  private
+		  private
 
-	  def required
-	  	klass = Rules::Required.new(attribute, value, parameters)
-	  	klass.valid?
-	  end
+		  def required?
+		  	Rules::Required.new(attribute, value, parameters).valid?
+		  end
+		end
 	end
 end

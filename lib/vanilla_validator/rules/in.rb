@@ -1,12 +1,12 @@
 module VanillaValidator
 	module Rules
-		class Boolean < BaseRule
+		class In < BaseRule
 			def valid?
-				!!value == value
+				parameters.include? value.to_s
 			end
 
 			def failure_message
-	      I18n.t('boolean', attribute: attribute)
+	      I18n.t('in', attribute: attribute)
 	    end
 		end
 	end

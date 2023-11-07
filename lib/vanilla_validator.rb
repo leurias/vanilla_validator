@@ -1,129 +1,96 @@
 # frozen_string_literal: true
 
-require "i18n"
+require 'i18n'
+require 'uri'
+require 'date'
 require 'active_support/inflector'
-require_relative "vanilla_validator/my_validation"
-require_relative "vanilla_validator/version"
-require_relative "vanilla_validator/value_extractor"
-require_relative "vanilla_validator/rule"
-require_relative "vanilla_validator/rule_parser"
-require_relative "vanilla_validator/nested_rule"
-require_relative "vanilla_validator/rules/base_rule"
-require_relative "vanilla_validator/rules/required"
-require_relative "vanilla_validator/rules/boolean"
-require_relative "vanilla_validator/rules/falsy"
-require_relative "vanilla_validator/rules/eq"
-require_relative "vanilla_validator/rules/email"
-require_relative "vanilla_validator/rules/max"
-require_relative "vanilla_validator/rules/min"
-require_relative "vanilla_validator/rules/like"
-require_relative "vanilla_validator/rules/gte"
-require_relative "vanilla_validator/rules/required_if"
+require "zeitwerk"
 
+# Configure Zeitwerk to load the classes and modules.
+loader = Zeitwerk::Loader.for_gem
+loader.ignore("#{__dir__}/vanilla_validator/railtie.rb")
+loader.setup
+loader.eager_load
+
+# Add custom locales for I18n.
 I18n.load_path += Dir[File.dirname(__FILE__) + "/locale/*.yml"]
 
+# VanillaValidator is a Ruby module that provides validation functionality.
 module VanillaValidator
-  @messages = {}
-  @validated = nil
+  extend self
 
-  def self.validate(input, contracts, options = {})
-    @input = input
-    @messages = {}
-    @validated = init_clone
+  # Extend the module with the methods from the Helpers module.
+  extend Helpers
 
-    contracts.each do |attribute, contract|
-      value = ValueExtractor.get(input, attribute)
-      rules = RuleParser.parse(contract)
+  # Public: Validate input data against a contract.
+  #
+  # input - The input data to be validated.
+  # contract - A set of validation rules defined as a Hash.
+  # options - A Hash of additional options for validation (optional).
+  #
+  # NOTE: The `@raw_input` instance variable is used in nested rules to prevent excessive parameter passing.
+  #
+  # Returns a Result object containing the validated attributes and any errors.
+  def validate(input, contract, options = {})
+    @raw_input = input.dup
 
-      rule_results = rules.map do |rule|
-        validator(attribute, value, rule)
+    errors = {}
+    validated = deep_clone_input(input)
+
+    contract.each do |attribute, term|
+      value  = ValueExtractor.get(input, attribute)
+      rules  = RuleParser.parse(term)
+
+      initialized_rules = rules.map do |rule|
+        initialize_rule(attribute, value, rule)
       end
 
-      invalid_rules = rule_results.reject(&:valid?)
+      invalid_rules = initialized_rules.reject(&:valid?)
+
       if invalid_rules.empty?
-        data_set(@validated, attribute, value)
+        data_set(validated, attribute, value)
       else
         invalid_rules.each do |result|
-          add_failure(attribute, result.failure_message)
+          (errors[attribute] ||= []) << result.failure_message
         end
       end
     end
 
-    @validated = delete_missing_values(@validated)
+    # Remove any missing or invalid attributes from the validated data.
+    validated_attributes = delete_missing_values(validated)
 
-    OpenStruct.new(errors: errors, valid: valid?, validated: @validated)
+    Result.new(validated_attributes, errors)
   end
 
-  def self.get_input
-    @input
+  # Public: Validate input data against a contract, stopping on the first failure.
+  #
+  # input    - The input data to validate.
+  # contract - A contract specifying validation rules for input data.
+  #
+  # Returns: A Result object containing validated data and error messages.
+  #
+  def validate!(input, contract)
+    validate(input, contract, stop_on_first_failure: true)
   end
 
-  def self.errors
-    @messages
+  def raw_input
+    @raw_input
   end
 
-  def self.valid?
-    @messages.empty?
-  end
+  private
 
-  def self.validator(attribute, value, rule)
-    Rules.const_get(rule.name.camelize).new(attribute, value, rule.parameters)
-  end
-
-  def self.add_failure(attribute, message)
-    @messages[attribute] ||= []
-    @messages[attribute] << message
-  end
-
-  def self.init_clone
-    new_input = @input.dup
-    nullify_values(new_input)
-  end
-
-  def self.data_set(array, key, value)
-    keys = key.split(".")
-    last_key = keys.pop
-
-    target = keys.reduce(array) do |hash, k|
-      case k
-      when "*"
-        hash.last ||= {}
-        hash.last
-      else
-        hash[k] ||= {}
-        hash[k]
-      end
-    end
-
-    if last_key == "*"
-      target << value
-    else
-      target[last_key] = value
-    end
-
-    array
-  end
-
-  def self.delete_missing_values(hash)
-    hash.each do |k, v|
-      if v == '__missing__'
-        hash.delete(k)
-      elsif v.kind_of?(Array)
-        hash[k] = v.reject { |item| item == '__missing__' }
-      end
-    end
-    return hash
-  end
-
-  def self.nullify_values(hash)
-    hash.each do |key, value|
-      if value.is_a?(Hash)
-        nullify_values(value)
-      elsif value.is_a?(Array)
-        value.each { |item| nullify_values(item) if item.is_a?(Hash) }
-      else
-        hash[key] = '__missing__'
-      end
-    end
+  # Private: Initialize a validation rule based on its name and parameters.
+  #
+  # attribute - The attribute being validated.
+  # value     - The value to validate.
+  # rule      - A rule object containing the name and parameters of the rule.
+  #
+  # Returns: An instance of the specific validation rule.
+  #
+  def initialize_rule(attribute, value, rule)
+    rule_class = Rules.const_get(rule.name.camelize)
+    rule_class.new(attribute, value, rule.parameters)
   end
 end
+
+require 'vanilla_validator/railtie' if defined? Rails
