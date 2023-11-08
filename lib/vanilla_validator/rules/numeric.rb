@@ -2,7 +2,8 @@ module VanillaValidator
 	module Rules
 		class Numeric < BaseRule
 			def valid?
-				value =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/
+				return true if value.kind_of?(Numeric)
+  			!!(Integer(value) rescue Float(value)) rescue false
 			end
 
 			def failure_message
