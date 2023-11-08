@@ -10,7 +10,6 @@ require "zeitwerk"
 loader = Zeitwerk::Loader.for_gem
 loader.ignore("#{__dir__}/vanilla_validator/railtie.rb")
 loader.setup
-loader.eager_load
 
 # Add custom locales for I18n.
 I18n.load_path += Dir[File.dirname(__FILE__) + "/locale/*.yml"]
@@ -36,6 +35,7 @@ module VanillaValidator
 
     errors = {}
     validated = deep_clone_input(input)
+    stop_on_first_failure = options[:stop_on_first_failure]
 
     contract.each do |attribute, term|
       value  = ValueExtractor.get(input, attribute)
@@ -52,6 +52,11 @@ module VanillaValidator
       else
         invalid_rules.each do |result|
           (errors[attribute] ||= []) << result.failure_message
+        end
+
+        if stop_on_first_failure
+          validated_attributes = delete_missing_values(validated)
+          return Result.new(validated_attributes, errors)
         end
       end
     end
@@ -92,5 +97,7 @@ module VanillaValidator
     rule_class.new(attribute, value, rule.parameters)
   end
 end
+
+loader.eager_load
 
 require 'vanilla_validator/railtie' if defined? Rails

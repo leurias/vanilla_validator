@@ -14,9 +14,9 @@ module VanillaValidator
     #
     def self.parse(term)
       if term.respond_to?(:call)
-        [Rule.new('proc', term)]
+        [Rule.new('block_rule', term)]
       elsif term.respond_to?(:valid?)
-        [Rule.new('custom', term)]
+        [Rule.new('custom_rule', term)]
       else
         parse_rules(term)
       end

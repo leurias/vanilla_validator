@@ -2,6 +2,33 @@ require 'spec_helper'
 
 describe '#validate' do
 
+	it 'validate a block' do
+		params = {"person"=>{"age"=>22}}
+		contract = {
+			'person.age' => lambda { |attribute, value, error|
+				unless value == 23
+					error.("Validation Failed")
+				end
+			}
+		}
+		result = VanillaValidator.validate(params, contract)
+		expect(result.validated).to eq({"person"=>{}})
+		expect(result.valid?).to eq(false)
+		expect(result.errors).to eq({"person.age"=>["Validation Failed"]})
+	end
+
+	it 'stop on first failure' do
+		params = {"person"=>{"name"=>"Francesco", "age"=>22, "role"=>"admin"}}
+		contract = {
+			'person.age'  => 'required|date',
+			'person.name' => 'required'
+		}
+
+		result = VanillaValidator.validate!(params, contract)
+		expect(result.validated).to eq({"person"=>{}})
+		expect(result.valid?).to eq(false)
+	end
+
 	it 'can validate nested params' do
 		params = {"person"=>{"name"=>"Francesco", "age"=>22, "role"=>"admin"}}
 		contract = {
