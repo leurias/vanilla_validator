@@ -1,3 +1,5 @@
+## 🚧 Project Under Development 🚧
+
 ## VanillaValidator
 
 VanillaValidator is a lightweight and clean solution for implementing validation in Ruby. It inspired from Laravel Validator and allows you to separate validations from the model layer in your Rails applications. With this gem, you can easily define and enforce validation rules for input data, ensuring the consistency and cleanliness of your application's data.
