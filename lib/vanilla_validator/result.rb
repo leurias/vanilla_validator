@@ -8,8 +8,6 @@ module VanillaValidator
       @errors = errors.with_indifferent_access
     end
 
-    alias :valid? :success?
-
     def success?
       errors.empty?
     end
@@ -17,5 +15,7 @@ module VanillaValidator
     def failed?
       errors.any?
     end
+
+    alias :valid? :success?
   end
 end

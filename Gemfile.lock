@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vanilla_validator (0.4.2)
+    vanilla_validator (0.4.7)
       activesupport
       i18n
       zeitwerk (~> 2.5)
