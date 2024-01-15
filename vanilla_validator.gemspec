@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name = "vanilla_validator"
   spec.version = VanillaValidator::VERSION
   spec.authors = ["Farid Mohammadi"]
-  spec.email = ["farid.mohammadi@hey.com"]
+  spec.email = ["1997farid.mohammadi@gmail.com"]
 
   spec.summary = "Easy to use ruby validator"
   spec.description = "Simple and easy to use validator inspired by Laravel Validator"
