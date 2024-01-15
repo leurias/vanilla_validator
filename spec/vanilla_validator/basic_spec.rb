@@ -258,4 +258,25 @@ describe '#validate' do
 		expect(result.valid?).to eq(true)
 	end
 
+	it 'validate a data with symbolized keys' do
+		input = { dob: '2023-01-01' }
+		result = VanillaValidator.validate(input, {
+			dob: "after_or_equal:2023-01-01"
+		})
+
+		expect(result.valid?).to eq(true)
+	end
+
+	it 'validate an input with symbolized keys testcase 2' do
+		params = {person: {name: "Francesco", age: 22, role: "admin"}}
+		contract = {
+			'person.age'  => 'required|date',
+			'person.name' => 'required'
+		}
+
+		result = VanillaValidator.validate!(params, contract)
+		expect(result.validated).to eq({"person" => {}})
+		expect(result.valid?).to eq(false)
+	end
+
 end

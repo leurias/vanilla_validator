@@ -4,6 +4,7 @@ require 'i18n'
 require 'uri'
 require 'date'
 require 'active_support/inflector'
+require "active_support/core_ext/hash/indifferent_access"
 require "zeitwerk"
 
 # Configure Zeitwerk to load the classes and modules.
@@ -31,6 +32,7 @@ module VanillaValidator
   #
   # Returns a Result object containing the validated attributes and any errors.
   def validate(input, contract, options = {})
+    input = input.with_indifferent_access
     @raw_input = input.dup
 
     errors = {}
@@ -38,6 +40,8 @@ module VanillaValidator
     stop_on_first_failure = options[:stop_on_first_failure]
 
     contract.each do |attribute, term|
+      attribute = attribute.to_s
+
       value  = ValueExtractor.get(input, attribute)
       rules  = RuleParser.parse(term)
 

@@ -52,7 +52,7 @@ describe VanillaValidator::RuleParser do
 	it 'testcase 8' do
 		rule = proc { |attribute, value, fail| }
 		rules = described_class.parse(rule).first
-		expect(rules.name).to eq 'proc'
+		expect(rules.name).to eq 'block_rule'
 		expect(rules.parameters).to be rule
 	end
 
@@ -68,7 +68,7 @@ describe VanillaValidator::RuleParser do
 
 		rule = MyRule
 		rules = described_class.parse(rule).first
-		expect(rules.name).to eq 'custom'
+		expect(rules.name).to eq 'custom_rule'
 		expect(rules.parameters).to be rule
 	end
 end

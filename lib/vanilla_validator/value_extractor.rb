@@ -14,8 +14,8 @@ module VanillaValidator
     #
     # Returns: The extracted data, or nil if the path does not lead to a valid value.
     #
-    def self.get(data, path)
-      splited_path = path.to_s.split('.')
+    def self.get(data, path)      
+      splited_path = path.split('.')
 
       raise "Too many path segments (maximum allowed is 5)" if splited_path.length > 5
 
