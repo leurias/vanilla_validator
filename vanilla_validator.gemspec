@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
+  spec.extra_rdoc_files = ['README.md']
 
   spec.add_runtime_dependency 'i18n'
   spec.add_development_dependency 'rspec', "~> 3.2"
