@@ -4,8 +4,8 @@ module VanillaValidator
     attr_accessor :validated, :errors
 
     def initialize(validated, errors = {})
-      @validated = validated
-      @errors = errors
+      @validated = validated.with_indifferent_access
+      @errors = errors.with_indifferent_access
     end
 
     def valid?
