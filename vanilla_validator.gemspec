@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.homepage = "https://github.com/leurias/vanilla_validator"
   spec.required_ruby_version = ">= 2.6.0"
 
-  spec.metadata["allowed_push_host"] = "https://rubygems.org"
+  spec.metadata["allowed_push_host"] = ["https://rubygems.org", "https://rubygems.pkg.github.com/leurias"]
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/leurias/vanilla_validator"
