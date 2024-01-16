@@ -80,9 +80,9 @@ params = {
 }
 
 validation = VanillaValidator.validate(params, {
-  'user.addresses.*.state' => 'required|string|in:CA,NY',
+  'user.addresses.*.state' => 'required|alpha|in:CA,NY',
   'user.orders.*.total'    => 'required|numeric|min:0',
-  'user.orders.*.status'   => 'required|string|in:pending,shipped,delivered'
+  'user.orders.*.status'   => 'required|alpha|in:pending,shipped,delivered'
 })
 ```
 
@@ -94,7 +94,7 @@ validation = VanillaValidator.validate(params, {
 - [Boolean](#boolean)
 - [Date](#date)
 - [Email](#email)
-- [EQ](#eq)
+- [Equal](#eq)
 - [Falsy](#falsy)
 - [Gte](#gte)
 - [In](#in)
@@ -126,7 +126,7 @@ The validated field must have a value that is after a specified date.
 
 ##### Email
 
-##### EQ
+##### Eq
 
 ##### Falsy
 

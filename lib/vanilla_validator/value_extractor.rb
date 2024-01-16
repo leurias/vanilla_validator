@@ -14,15 +14,15 @@ module VanillaValidator
     #
     # Returns: The extracted data, or nil if the path does not lead to a valid value.
     #
-    def self.get(data, path)      
-      splited_path = path.split('.')
+    def self.get(data, path)
+      path_components = path.split('.')
 
-      raise "Too many path segments (maximum allowed is 5)" if splited_path.length > 5
+      raise "Too many path segments (maximum allowed is 5)" if path_components.length > 5
 
       if path.include?("*")
-        self.get_at_wildcard_path(data, splited_path)
+        self.get_at_wildcard_path(data, path_components)
       else
-        self.get_at_explicit_path(data, splited_path)
+        self.get_at_explicit_path(data, path_components)
       end
     end
 
@@ -65,22 +65,20 @@ module VanillaValidator
       path.each_with_index do |segment, index|
         return data if segment.nil?
 
-        if segment.eql?("*")
-          rpath = path[index.next..-1] || []
+        if segment == "*"
+          remaining_path = path[index.next..-1] || []
 
-          unless data.is_a?(Array)
-            return default
-          end
+          return default unless data.is_a?(Array)
 
-          result = data.map { |item| get_at_wildcard_path(item, rpath) }
+          result = data.map { |item| get_at_wildcard_path(item, remaining_path) }
 
-          return rpath.include?("*") ? result.flatten : result
+          return remaining_path.include?("*") ? result.flatten : result
         end
 
         if data.is_a?(Hash) && data.key?(segment)
           data = data[segment]
-        elsif target.is_a?(Array) && ( Integer(segment) rescue false )
-          target = target[Integer(segment)]
+        elsif data.is_a?(Array) && ( Integer(segment) rescue false )
+          data = data[Integer(segment)]
         else
           return default
         end
