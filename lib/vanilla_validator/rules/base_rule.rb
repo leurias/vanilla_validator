@@ -11,7 +11,12 @@ module VanillaValidator
 
 		  def required?
 		  	Rules::Required.new(attribute, value, parameters).valid?
-		  end
+			end
+
+			def __(key, **args)
+				full_key = "vanilla_validator.#{key}"
+				I18n.t(full_key, **args)
+			end
 		end
 	end
 end
